@@ -15,6 +15,7 @@ function App() {
       setPortInfo(await selectedPort.getInfo().usbVendorId);
     } catch (err) {
       console.error('Error:', err);
+      alert('Somthing wrong happened, please try again');
     }
   }
   async function sendCommand(command) {
@@ -35,9 +36,25 @@ function App() {
         <Typography variant='h4' component='h1' gutterBottom>
           MagnetBase Control Panel
         </Typography>
-        <Button variant='contained' onClick={connectToArduino} sx={{ mb: 2 }}>
-          {connected ? `Connected to ${portInfo}` : `Connect to MagnetBase`}
-        </Button>
+        <div className='flex gap-2'>
+          <Button variant='contained' onClick={connectToArduino} sx={{ mb: 2 }}>
+            {connected ? `Connected to ${portInfo}` : `Connect to MagnetBase`}
+          </Button>
+          {port && (
+            <Button
+              onClick={async () => {
+                await port.close();
+                setPort(null);
+                setConnected(false);
+                alert('Disconnected!');
+              }}
+              sx={{ mb: 2 }}
+            >
+              Disconnect
+            </Button>
+          )}
+        </div>
+
         <div className='grid grid-cols-3 gap-2'>
           {Array.from({ length: 9 }, (_, i) => (
             <MagPixel key={i} sendCommand={sendCommand} command={i + 1}>
