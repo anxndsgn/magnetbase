@@ -57,13 +57,27 @@ function App() {
 
         <div className='grid grid-cols-3 gap-2'>
           {Array.from({ length: 9 }, (_, i) => (
-            <MagPixel key={i} sendCommand={sendCommand} command={i + 1}>
+            <MagPixel
+              key={i}
+              sendCommand={sendCommand}
+              command={i + 1}
+              connected={connected}
+            >
               {i + 1}
             </MagPixel>
           ))}
         </div>
         <span></span>
       </Box>
+      <Typography variant='h4' component='h1' gutterBottom>
+        Changelog
+      </Typography>
+      <Typography variant='body1' component='p' gutterBottom>
+        <ul>
+          <li>v1.0: Initial release</li>
+          <li>v1.1: 改为鼠标进入按钮时发送指令</li>
+        </ul>
+      </Typography>
     </Container>
   );
 }
@@ -71,11 +85,14 @@ function App() {
 export default App;
 
 // eslint-disable-next-line react/prop-types
-function MagPixel({ sendCommand, command, children }) {
+function MagPixel({ sendCommand, command, connected, children }) {
   return (
     <Button
-      variant='outlined'
+      variant={connected ? 'outlined' : 'disabled'}
       onClick={() => sendCommand(command)}
+      onMouseEnter={() => {
+        sendCommand(command);
+      }}
       className=' h-24'
     >
       {children}
